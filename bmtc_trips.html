@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title></title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.35.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.35.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+    </style>
+</head>
+<body>
+<style>
+
+.legend {
+    background-color: #fff;
+    border-radius: 3px;
+    bottom: 30px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.10);
+    font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    padding: 10px;
+    position: absolute;
+    right: 10px;
+    z-index: 1;
+}
+
+.legend h4 {
+    margin: 0 0 10px;
+}
+
+.legend div span {
+    border-radius: 50%;
+    display: inline-block;
+    height: 10px;
+    margin-right: 5px;
+    width: 10px;
+}
+
+</style>
+<style>
+    #menu {
+        background: #fff;
+        position: absolute;
+        z-index: 1;
+        top: 10px;
+        right: 10px;
+        border-radius: 3px;
+        width: 120px;
+        border: 1px solid rgba(0,0,0,0.4);
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    #menu a {
+        font-size: 13px;
+        color: #404040;
+        display: block;
+        margin: 0;
+        padding: 0;
+        padding: 10px;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(0,0,0,0.25);
+        text-align: center;
+    }
+
+    #menu a:last-child {
+        border: none;
+    }
+
+    #menu a:hover {
+        background-color: #f8f8f8;
+        color: #404040;
+    }
+
+    #menu a.active {
+        background-color: #3887be;
+        color: #ffffff;
+    }
+
+    #menu a.active:hover {
+        background: #3074a4;
+    }
+</style>
+
+<nav id="menu"></nav>
+
+<div id="map"></div>
+<div id='route-legend' class='legend'>
+    <h4>BMTC_Trip Distance</h4>
+    <div><span style='background-color: #e21212'></span>1-10km</div>
+    <div><span style='background-color: #e29612'></span>11-20km</div>
+    <div><span style='background-color: #51e212'></span>21-30km</div>
+    <div><span style='background-color: #12e2ce'></span>31-40km</div>
+    <div><span style='background-color: #e28f12'></span>41-50km</div>
+    <div><span style='background-color: #0c90e9'></span>51-60km</div>
+    <div><span style='background-color: #e90cde'></span>61-70km</div>
+    <div><span style='background-color: #ffffff'></span>71-80km</div>
+</div>
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoiYW5pcnVkaDIwMjAiLCJhIjoiY2oxMzljM3EwMDAwYTJ3czhtd2dsMmRxZiJ9._9BAosMxlmvnT8FXh7JXYw';
+var map = new mapboxgl.Map({
+    container: 'map', // container id
+    style: 'mapbox://styles/anirudh2020/cj166w8rr003l2sn3htra2hli', //stylesheet location
+    center: [77.59, 12.97], // starting position
+    zoom: 9 // starting zoom
+});
+
+var toggleableLayerIds = [ '1-10_km', '11-20_km', '21-30_km', '31-40_km', '41-50_km', '51-60_km', '61-70_km', '71-80_km' ];
+
+for (var i = 0; i < toggleableLayerIds.length; i++) {
+    var id = toggleableLayerIds[i];
+
+    var link = document.createElement('a');
+    link.href = '#';
+    link.className = 'active';
+    link.textContent = id;
+
+    link.onclick = function (e) {
+        var clickedLayer = this.textContent;
+        e.preventDefault();
+        e.stopPropagation();
+
+        var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+        if (visibility === 'visible') {
+            map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+            this.className = '';
+        } else {
+            this.className = 'active';
+            map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+        }
+    };
+
+    var layers = document.getElementById('menu');
+    layers.appendChild(link);
+}
+
+map.addControl(new mapboxgl.NavigationControl());
+</script>
+
+</body>
+</html>
